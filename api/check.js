@@ -1,6 +1,6 @@
-import fetch from 'node-fetch'
+import fetch from 'node-fetch';
 
-export default handler = async () => {
+export default function handler(request, response) {
   const res = await fetch('https://www.contiki.com/en-au/tours/getdatespricing?tourOptionId=254196&startTimestamp=2023-06-01', {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
