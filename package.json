@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/cain/contiki-holiday-checker#readme",
   "dependencies": {
-    "node-fetch": "^3.3.0"
+    "node-fetch": "^2.6.1"
   }
 }
