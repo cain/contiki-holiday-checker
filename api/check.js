@@ -1,8 +1,7 @@
-import fetch from 'node-fetch';
+const axios = require('axios');
 
 export default function handler(request, response) {
-  const res = await fetch('https://www.contiki.com/en-au/tours/getdatespricing?tourOptionId=254196&startTimestamp=2023-06-01');
+  const res = await axios.get('https://www.contiki.com/en-au/tours/getdatespricing?tourOptionId=254196&startTimestamp=2023-06-01');
 
-  const data = await res.json();
-  return response.status(200).json({ data });
+  return response.status(200).json({ res });
 }
