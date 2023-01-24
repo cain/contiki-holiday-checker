@@ -7,31 +7,32 @@ const mailgun = require("mailgun-js");
 const TOUR_OPTION = "254196";
 const TIME = "2023-06-01";
 const API_ENDPOINT = "https://www.contiki.com/en-au/tours/getdatespricing?tourOptionId=" + TOUR_OPTION + "&startTimestamp=" + TIME;
-
 const SELECTED = "2023-06-15"
 
-exports.handler =  async (event, context) => {
+exports.handler = async (event, context) => {
   try {
-
     // Fetch data
     const response = await fetch(API_ENDPOINT);
     const data = await response.json();
 
     // Find selected data
     const item = data.find((holiday) => holiday.startDate === SELECTED);
-    const message = `${item.title} ${item.startDate} ${item.status}`;
+    const message = `${item.status.toUpperCase()} ${item.title} ${item.startDate} ${new Date().toLocaleString()}`;
 
     // Send email notification
-    const mg = mailgun({apiKey: process.env.MAILGUN, domain: process.env.MAILGUN_DOMAIN});
-    const email = {
-      from: 'Cain <cain.hall98@gmail.com>',
-      to: 'cain@plannthat.com',
-      subject: 'Checking Contiki',
-      text: message
-    };
-    await mg.messages().send(email, function (error, body) {
-      console.log(body);
-    });
+    await new Promise((res, rej) => {
+      const mg = mailgun({apiKey: process.env.MAILGUN, domain: process.env.MAILGUN_DOMAIN});
+      const email = {
+        from: 'Cain <cain.hall98@gmail.com>',
+        to: process.env.EMAIL_TO,
+        subject: 'Checking Contiki',
+        text: message
+      };
+      mg.messages().send(email, function (error, body) {
+        if (error) rej(error);
+        res(body);
+      });
+    })
 
     // Endpoint response
     return {
@@ -43,7 +44,7 @@ exports.handler =  async (event, context) => {
       },
     };
   } catch (error) {
-    console.log(error);
+    console.log('error', error);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: 'Failed fetching data' }),
