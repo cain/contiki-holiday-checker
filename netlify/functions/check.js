@@ -7,19 +7,17 @@ const API_ENDPOINT = "https://www.contiki.com/en-au/tours/getdatespricing?tourOp
 const SELECTED = "2023-06-15"
 
 exports.handler = async (event, context) => {
-  const response = fetch(API_ENDPOINT, { headers: { Accept: "application/json" } })
-    .then((response) => response.json())
-    .catch((error) => ({ statusCode: 422, body: String(error) }));
+  try {
+    const response = await fetch(API_ENDPOINT);
+    const data = await response.json();
 
-  console.log('response', response);
-  if(response.statusCode === 422) {
-    return response;
+    const item = data.find((holiday) => holiday.startDate === SELECTED);
+    return { statusCode: 200, body: JSON.stringify({ item }) };
+  } catch (error) {
+    console.log(error);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: 'Failed fetching data' }),
+    };
   }
-
-  const item = response.data.find((holiday) => holiday.startDate === SELECTED);
-
-  return {
-    statusCode: 200,
-    body: JSON.stringify(item),
-  };
 };
