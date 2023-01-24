@@ -1,17 +1,13 @@
-import fetch from "node-fetch";
+const fetch = require("node-fetch");
 
-const API_ENDPOINT = 'https://cat-fact.herokuapp.com/facts';
+const API_ENDPOINT = "https://icanhazdadjoke.com/";
 
 exports.handler = async (event, context) => {
-  try {
-    const response = await fetch(API_ENDPOINT);
-    const data = await response.json();
-    return { statusCode: 200, body: JSON.stringify({ data }) };
-  } catch (error) {
-    console.log(error);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: 'Failed fetching data' }),
-    };
-  }
+  return fetch(API_ENDPOINT, { headers: { Accept: "application/json" } })
+    .then((response) => response.json())
+    .then((data) => ({
+      statusCode: 200,
+      body: data.joke,
+    }))
+    .catch((error) => ({ statusCode: 422, body: String(error) }));
 };
