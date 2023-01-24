@@ -12,30 +12,31 @@ const SELECTED = "2023-06-15"
 
 exports.handler =  async (event, context) => {
   try {
+
+    // Fetch data
     const response = await fetch(API_ENDPOINT);
     const data = await response.json();
 
+    // Find selected data
     const item = data.find((holiday) => holiday.startDate === SELECTED);
+    const message = `${item.title} ${item.startDate} ${item.status}`;
 
-    const obj = {
-      title: item.title,
-      startDate: item.startDate,
-      status: item.status,
-    }
-    const DOMAIN = 'sandbox076fd55095094b549b4c51d011f58619.mailgun.org';
-    const mg = mailgun({apiKey: process.env.MAILGUN, domain: DOMAIN});
+    // Send email notification
+    const mg = mailgun({apiKey: process.env.MAILGUN, domain: process.env.MAILGUN_DOMAIN});
     const email = {
-      from: 'Excited User <me@sandbox076fd55095094b549b4c51d011f58619.mailgun.org>',
+      from: 'Cain <cain.hall98@gmail.com>',
       to: 'cain@plannthat.com',
-      subject: 'Hello',
-      text: 'Testing some Mailgun awesomness!'
+      subject: 'Checking Contiki',
+      text: message
     };
     await mg.messages().send(email, function (error, body) {
       console.log(body);
     });
+
+    // Endpoint response
     return {
       statusCode: 200,
-      body: JSON.stringify(obj),
+      body: JSON.stringify(item),
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
         'Access-Control-Allow-Origin': '*',
