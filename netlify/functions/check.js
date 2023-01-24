@@ -22,7 +22,7 @@ exports.handler =  async (event, context) => {
       startDate: item.startDate,
       status: item.status,
     }
-    const DOMAIN = 'cainhall.com.au';
+    const DOMAIN = 'sandbox076fd55095094b549b4c51d011f58619.mailgun.org';
     const mg = mailgun({apiKey: process.env.MAILGUN, domain: DOMAIN});
     const email = {
       from: 'Excited User <me@samples.mailgun.org>',
