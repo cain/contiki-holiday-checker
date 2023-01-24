@@ -15,7 +15,7 @@ exports.handler = async (event, context) => {
     return response;
   }
 
-  const item = data.find((holiday) => holiday.startDate === SELECTED);
+  const item = response.find((holiday) => holiday.startDate === SELECTED);
 
   return {
     statusCode: 200,
