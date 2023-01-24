@@ -2,9 +2,9 @@ const fetch = require("node-fetch");
 const mailgun = require("mailgun-js");
 
 // https://docs.netlify.com/functions/scheduled-functions/#cron-expression-inline-in-function-code
-const { schedule } = require("@netlify/functions");
+// const { schedule } = require("@netlify/functions");
 
-const handler = async (event, context) => {
+exports.handler =  async (event, context) => {
   try {
     const response = await fetch(API_ENDPOINT);
     const data = await response.json();
@@ -44,4 +44,4 @@ const handler = async (event, context) => {
   }
 };
 
-exports.handler = schedule("@daily", handler);
+// exports.handler = schedule("@daily", handler);
