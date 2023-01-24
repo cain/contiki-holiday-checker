@@ -24,15 +24,16 @@ exports.handler =  async (event, context) => {
     }
     const DOMAIN = 'sandbox076fd55095094b549b4c51d011f58619.mailgun.org';
     const mg = mailgun({apiKey: process.env.MAILGUN, domain: DOMAIN});
-    const email = {
-      from: 'Excited User <me@samples.mailgun.org>',
-      to: 'cain@plannthat.com',
-      subject: 'Hello',
-      text: 'Testing some Mailgun awesomness!'
-    };
-    mg.messages().send(email, function (error, body) {
-      console.log(body);
-    });
+    await mg.messages.create('sandbox076fd55095094b549b4c51d011f58619.mailgun.org', {
+      from: "Excited User <mailgun@sandbox076fd55095094b549b4c51d011f58619.mailgun.org>",
+      to: ["cain@plannthat.com"],
+      subject: "Hello",
+      text: "Testing some Mailgun awesomness!",
+      html: "<h1>Testing some Mailgun awesomness!</h1>"
+    }).then((res) => {
+      console.log(res)
+      return res;
+    })
     return {
       statusCode: 200,
       body: JSON.stringify(obj),
