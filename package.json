@@ -21,6 +21,8 @@
     "node-fetch": "^2.6.1"
   },
   "dependencies": {
-    "@sendgrid/mail": "^7.7.0"
+    "@netlify/functions": "^1.4.0",
+    "@sendgrid/mail": "^7.7.0",
+    "mailgun-js": "^0.22.0"
   }
 }

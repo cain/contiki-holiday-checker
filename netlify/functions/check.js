@@ -1,13 +1,10 @@
 const fetch = require("node-fetch");
-const sgMail = require('@sendgrid/mail')
+const mailgun = require("mailgun-js");
 
-const TOUR_OPTION = "254196";
-const TIME = "2023-06-01";
-const API_ENDPOINT = "https://www.contiki.com/en-au/tours/getdatespricing?tourOptionId=" +TOUR_OPTION + "&startTimestamp=" + TIME;
+// https://docs.netlify.com/functions/scheduled-functions/#cron-expression-inline-in-function-code
+const { schedule } = require("@netlify/functions");
 
-const SELECTED = "2023-06-15"
-
-exports.handler = async (event, context) => {
+const handler = async (event, context) => {
   try {
     const response = await fetch(API_ENDPOINT);
     const data = await response.json();
@@ -19,25 +16,17 @@ exports.handler = async (event, context) => {
       startDate: item.startDate,
       status: item.status,
     }
-
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY)
-      const msg = {
-        to: 'cain.hall98@gmail.com', // Change to your recipient
-        from: 'cain@plannthat.com', // Change to your verified sender
-        subject: 'Sending with SendGrid is Fun',
-        text: 'and easy to do anywhere, even with Node.js',
-        html: '<strong>and easy to do anywhere, even with Node.js</strong>',
-      }
-    await sgMail
-      .send(msg)
-      .then(() => {
-        console.log('Email sent')
-        return 'email sent';
-      })
-      .catch((error) => {
-        console.error(error)
-        return 'email error';
-      })
+    const DOMAIN = 'cainhall.com.au';
+    const mg = mailgun({apiKey: process.env.MAILGUN, domain: DOMAIN});
+    const email = {
+      from: 'Excited User <me@samples.mailgun.org>',
+      to: 'cain@plannthat.com',
+      subject: 'Hello',
+      text: 'Testing some Mailgun awesomness!'
+    };
+    mg.messages().send(email, function (error, body) {
+      console.log(body);
+    });
     return {
       statusCode: 200,
       body: JSON.stringify(obj),
@@ -54,3 +43,5 @@ exports.handler = async (event, context) => {
     };
   }
 };
+
+exports.handler = schedule("@daily", handler);
