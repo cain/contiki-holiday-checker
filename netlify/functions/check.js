@@ -8,6 +8,8 @@ const TOUR_OPTION = "254196";
 const TIME = "2023-06-01";
 const API_ENDPOINT = "https://www.contiki.com/en-au/tours/getdatespricing?tourOptionId=" + TOUR_OPTION + "&startTimestamp=" + TIME;
 
+const SELECTED = "2023-06-15"
+
 exports.handler =  async (event, context) => {
   try {
     const response = await fetch(API_ENDPOINT);
