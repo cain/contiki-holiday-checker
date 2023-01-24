@@ -12,7 +12,20 @@ exports.handler = async (event, context) => {
     const data = await response.json();
 
     const item = data.find((holiday) => holiday.startDate === SELECTED);
-    return { statusCode: 200, body: JSON.stringify({ item }) };
+
+    const obj = {
+      title: item.title,
+      startDate: item.startDate,
+      status: item.status,
+    }
+    return {
+      statusCode: 200,
+      body: JSON.stringify(obj),
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Access-Control-Allow-Origin': '*',
+      },
+    };
   } catch (error) {
     console.log(error);
     return {
