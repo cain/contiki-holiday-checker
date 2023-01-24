@@ -11,11 +11,12 @@ exports.handler = async (event, context) => {
     .then((response) => response.json())
     .catch((error) => ({ statusCode: 422, body: String(error) }));
 
+  console.log('response', response);
   if(response.statusCode === 422) {
     return response;
   }
 
-  const item = response.find((holiday) => holiday.startDate === SELECTED);
+  const item = response.data.find((holiday) => holiday.startDate === SELECTED);
 
   return {
     statusCode: 200,
