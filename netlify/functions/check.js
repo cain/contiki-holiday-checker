@@ -4,6 +4,10 @@ const mailgun = require("mailgun-js");
 // https://docs.netlify.com/functions/scheduled-functions/#cron-expression-inline-in-function-code
 // const { schedule } = require("@netlify/functions");
 
+const TOUR_OPTION = "254196";
+const TIME = "2023-06-01";
+const API_ENDPOINT = "https://www.contiki.com/en-au/tours/getdatespricing?tourOptionId=" + TOUR_OPTION + "&startTimestamp=" + TIME;
+
 exports.handler =  async (event, context) => {
   try {
     const response = await fetch(API_ENDPOINT);
