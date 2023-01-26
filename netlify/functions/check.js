@@ -17,15 +17,15 @@ exports.handler = async (event, context) => {
 
     // Find selected data
     const item = data.find((holiday) => holiday.startDate === SELECTED);
-    const message = `${item.status.toUpperCase()} ${item.title} ${item.startDate} ${new Date().toLocaleString()}`;
+    const message = `${item.status.toUpperCase()} ${item.title} ${item.startDate}`;
 
     // Send email notification
     await new Promise((res, rej) => {
       const mg = mailgun({apiKey: process.env.MAILGUN, domain: process.env.MAILGUN_DOMAIN});
       const email = {
-        from: 'Cain <cain.hall98@gmail.com>',
+        from: `Cain <${process.env.EMAIL_FROM}>`,
         to: process.env.EMAIL_TO,
-        subject: 'Checking Contiki',
+        subject: item.title,
         text: message
       };
       mg.messages().send(email, function (error, body) {
