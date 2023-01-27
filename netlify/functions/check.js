@@ -15,10 +15,10 @@ exports.handler = async (event, context) => {
     const item = data.find((holiday) => holiday.startDate === SELECTED);
     const date = new Date().toLocaleString("en-US", {timeZone: "Australia/Sydney"});
     const status = item.status.toUpperCase();
-    const message = `${status} ${item.title} ${item.startDate} ${date}`;
+    const message = `${status} ${item.title} ${item.startDate}. Time: ${date}`;
 
     // Send email notification
-    if(status === 'CLOSED') {
+    if(status !== 'CLOSED') {
       await new Promise((res, rej) => {
         const mg = mailgun({apiKey: process.env.MAILGUN, domain: process.env.MAILGUN_DOMAIN});
         const email = {
