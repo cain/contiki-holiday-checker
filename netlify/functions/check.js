@@ -1,9 +1,6 @@
 const fetch = require("node-fetch");
 const mailgun = require("mailgun-js");
 
-// https://docs.netlify.com/functions/scheduled-functions/#cron-expression-inline-in-function-code
-// const { schedule } = require("@netlify/functions");
-
 const TOUR_OPTION = "254196";
 const TIME = "2023-06-01";
 const API_ENDPOINT = "https://www.contiki.com/en-au/tours/getdatespricing?tourOptionId=" + TOUR_OPTION + "&startTimestamp=" + TIME;
@@ -15,24 +12,27 @@ exports.handler = async (event, context) => {
     const response = await fetch(API_ENDPOINT);
     const data = await response.json();
 
-    // Find selected data
     const item = data.find((holiday) => holiday.startDate === SELECTED);
-    const message = `${item.status.toUpperCase()} ${item.title} ${item.startDate}`;
+    const date = new Date().toLocaleString("en-US", {timeZone: "Australia/Sydney"});
+    const status = item.status.toUpperCase();
+    const message = `${status} ${item.title} ${item.startDate} ${date}`;
 
     // Send email notification
-    await new Promise((res, rej) => {
-      const mg = mailgun({apiKey: process.env.MAILGUN, domain: process.env.MAILGUN_DOMAIN});
-      const email = {
-        from: `Cain <${process.env.EMAIL_FROM}>`,
-        to: process.env.EMAIL_TO,
-        subject: item.title,
-        text: message
-      };
-      mg.messages().send(email, function (error, body) {
-        if (error) rej(error);
-        res(body);
+    if(status === 'CLOSED') {
+      await new Promise((res, rej) => {
+        const mg = mailgun({apiKey: process.env.MAILGUN, domain: process.env.MAILGUN_DOMAIN});
+        const email = {
+          from: `Cain <${process.env.EMAIL_FROM}>`,
+          to: process.env.EMAIL_TO,
+          subject: item.title,
+          text: message
+        };
+        mg.messages().send(email, function (error, body) {
+          if (error) rej(error);
+          res(body);
+        });
       });
-    })
+    }
 
     // Endpoint response
     return {
@@ -52,4 +52,3 @@ exports.handler = async (event, context) => {
   }
 };
 
-// exports.handler = schedule("@daily", handler);
