@@ -32,6 +32,9 @@ exports.handler = async (event, context) => {
           res(body);
         });
       });
+    } else {
+      // message for netfliy logs
+      console.log(message);
     }
 
     // Endpoint response
