@@ -3,3 +3,6 @@
 # Shut it down, he got the holiday!
 # [functions."check"]
 # schedule = "*/5 * * * *"
+
+[functions."intrepid"]
+schedule = "*/5 * * * *"
