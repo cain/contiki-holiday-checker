@@ -5,4 +5,4 @@
 # schedule = "*/5 * * * *"
 
 [functions."coldplay"]
-schedule = "*/5 * * * *"
+schedule = "*/3 * * * *"

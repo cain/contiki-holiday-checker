@@ -27,16 +27,16 @@ exports.handler = async (event, context) => {
       // Send email notification if tickets found
       if (found) {
         foundTickets = true;
-        const regex = /section\s+(\d+).*?(?:row|seat)\s+(\d+)/gi;
+        const regex = /<p[^>]*>\s*([^<]*section[^<]*)\s*<\/p>/gi;
 
         const matches = [...data.matchAll(regex)];
+
 
         let seats = [];
         matches && matches.forEach(match => {
           if(match && match.length > 0) {
             const section = match[1];
-            const seatOrRow = match[2];
-            seats.push(`Section: ${section}, Seat/Row: ${seatOrRow}`);
+            seats.push(`seat: ${section}`);
           }
         });
         await new Promise((res, rej) => {
