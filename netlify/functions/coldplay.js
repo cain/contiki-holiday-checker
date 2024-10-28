@@ -27,13 +27,25 @@ exports.handler = async (event, context) => {
       // Send email notification if tickets found
       if (found) {
         foundTickets = true;
+        const regex = /section\s+(\d+).*?(?:row|seat)\s+(\d+)/gi;
+
+        const matches = [...data.matchAll(regex)];
+
+        let seats = [];
+        matches && matches.forEach(match => {
+          if(match && match.length > 0) {
+            const section = match[1];
+            const seatOrRow = match[2];
+            seats.push(`Section: ${section}, Seat/Row: ${seatOrRow}`);
+          }
+        });
         await new Promise((res, rej) => {
           const mg = mailgun({apiKey: process.env.MAILGUN, domain: process.env.MAILGUN_DOMAIN});
           const email = {
             from: `Cain <${process.env.EMAIL_FROM}>`,
             to: process.env.EMAIL_TO,
-            subject: `Found tickets for Coldplay: ${found}`,
-            text: `Found tickets at: ${API_ENDPOINT}`
+            subject: `Found tickets for Coldplay: ${found} ${API_ENDPOINT}`,
+            text: `Found tickets at: ${API_ENDPOINT}\n\n${seats.join('\n')}`
           };
           mg.messages().send(email, function (error, body) {
             if (error) rej(error);
