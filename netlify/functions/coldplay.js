@@ -17,15 +17,17 @@ exports.handler = async (event, context) => {
         method: "GET",
         redirect: "follow"
       });
+
+      // text html response
       const data = await response.text();
 
-      const tickets = ['2 tickets', '3 tickets', '4 tickets', '5 tickets']
-      const found = tickets.find((x) => data.indexOf(x) > -1);
+      const tickets = ['2 tickets', '3 tickets', '4 tickets', '5 tickets'];
+      const found = tickets.reduce((count, ticket) => count + (data.indexOf(ticket) > -1 ? 1 : 0), 0);
 
       console.log('checking endpoint:', API_ENDPOINT);
       
       // Send email notification if tickets found
-      if (found) {
+      if (found > 0) {
         foundTickets = true;
         const regex = /<p[^>]*>\s*([^<]*section[^<]*)\s*<\/p>/gi;
 
@@ -41,7 +43,7 @@ exports.handler = async (event, context) => {
         });
 
         const ignore = 'seat: section 437 row 11'
-        if (seats.length === 1 && seats[0].indexOf(ignore) > -1) {
+        if (seats.length === 1 && seats[0].indexOf(ignore) > -1 && found === 1) {
           console.log('ignoring', seats[0]);
           return;
         }
