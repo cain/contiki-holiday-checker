@@ -20,7 +20,7 @@ exports.handler = async (event, context) => {
       const data = await response.text();
 
       const tickets = ['2 tickets', '3 tickets', '4 tickets', '5 tickets']
-      const found = tickets.find((x) => data.indexOf(x) > -1);
+      const found = tickets.find((x) => data.indexOf(x) > -1 && data.indexOf(ignore) === -1);
 
       console.log('checking endpoint:', API_ENDPOINT);
       
@@ -39,6 +39,11 @@ exports.handler = async (event, context) => {
             seats.push(`seat: ${section}`);
           }
         });
+
+        const ignore = ['Section 437 Row 11']
+        if (seats.length === 1 && ignore.find((x) => seats[0].indexOf(x) > -1)) {
+          return;
+        }
         await new Promise((res, rej) => {
           const mg = mailgun({apiKey: process.env.MAILGUN, domain: process.env.MAILGUN_DOMAIN});
           const email = {
