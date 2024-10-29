@@ -20,7 +20,7 @@ exports.handler = async (event, context) => {
       const data = await response.text();
 
       const tickets = ['2 tickets', '3 tickets', '4 tickets', '5 tickets']
-      const found = tickets.find((x) => data.indexOf(x) > -1 && data.indexOf(ignore) === -1);
+      const found = tickets.find((x) => data.indexOf(x) > -1);
 
       console.log('checking endpoint:', API_ENDPOINT);
       
