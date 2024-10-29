@@ -40,10 +40,12 @@ exports.handler = async (event, context) => {
           }
         });
 
-        const ignore = ['Section 437 Row 11']
-        if (seats.length === 1 && ignore.find((x) => seats[0].indexOf(x) > -1)) {
+        const ignore = 'seat: section 437 row 11'
+        if (seats.length === 1 && seats[0].indexOf(ignore) > -1) {
+          console.log('ignoring', seats[0]);
           return;
         }
+
         await new Promise((res, rej) => {
           const mg = mailgun({apiKey: process.env.MAILGUN, domain: process.env.MAILGUN_DOMAIN});
           const email = {
