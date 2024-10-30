@@ -22,7 +22,7 @@ exports.handler = async (event, context) => {
 
       const cleanedData = data.replace(/\$203\.54 ea • \d+ tickets/g, '').replace(/3 tickets are available/g, '');
 
-      console.log('cleanedData', cleanedData);
+      // console.log('cleanedData', cleanedData);
 
       const tickets = ['2 tickets', '3 tickets', '4 tickets', '5 tickets']
 
