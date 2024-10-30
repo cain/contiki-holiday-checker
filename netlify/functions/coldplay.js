@@ -4,7 +4,8 @@ const mailgun = require("mailgun-js");
 const API_ENDPOINTS = [
   "https://tixel.com/au/music-tickets/2024/11/06/coldplay-accor-stadium-sydney", 
   "https://tixel.com/au/music-tickets/2024/11/07/coldplay-accor-stadium-sydney", 
-  "https://tixel.com/au/music-tickets/2024/11/10/coldplay-accor-stadium-sydney"];
+  // "https://tixel.com/au/music-tickets/2024/11/10/coldplay-accor-stadium-sydney"
+];
 
 exports.handler = async (event, context) => {
   try {
@@ -21,15 +22,7 @@ exports.handler = async (event, context) => {
 
       const tickets = ['2 tickets', '3 tickets', '4 tickets', '5 tickets']
 
-      let found = null;
-
-      tickets.forEach((x) => {
-        const count = data.match(new RegExp(x, 'g'));
-
-        if (count) {
-          found = x;
-        }
-      })
+      const found = tickets.find((x) => data.toLocaleLowerCase().indexOf(x.toLocaleLowerCase()) > -1);
 
 
       console.log('checking endpoint:', API_ENDPOINT);
@@ -52,11 +45,11 @@ exports.handler = async (event, context) => {
           }
         });
 
-        const ignore = 'section 437 row 11'
-        if (data.indexOf(ignore) > -1 && found === 1) {
-          console.log('ignoring', seats[0]);
-          return;
-        }
+        // const ignore = 'section 437 row 11'
+        // if (data.indexOf(ignore) > -1 && found === 1) {
+        //   console.log('ignoring', seats[0]);
+        //   return;
+        // }
 
         await new Promise((res, rej) => {
           const mg = mailgun({apiKey: process.env.MAILGUN, domain: process.env.MAILGUN_DOMAIN});
