@@ -20,7 +20,17 @@ exports.handler = async (event, context) => {
       const data = await response.text();
 
       const tickets = ['2 tickets', '3 tickets', '4 tickets', '5 tickets']
-      const found = tickets.find((x) => data.indexOf(x) > -1);
+
+      let found = null;
+
+      tickets.forEach((x) => {
+        const count = data.match(new RegExp(x, 'g'));
+
+        if (count) {
+          found = x;
+        }
+      })
+
 
       console.log('checking endpoint:', API_ENDPOINT);
       
@@ -40,8 +50,8 @@ exports.handler = async (event, context) => {
           }
         });
 
-        const ignore = 'seat: section 437 row 11'
-        if (seats.length === 1 && seats[0].indexOf(ignore) > -1) {
+        const ignore = 'section 437 row 11'
+        if (data.indexOf(ignore) > -1 && found === 1) {
           console.log('ignoring', seats[0]);
           return;
         }
