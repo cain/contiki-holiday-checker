@@ -4,7 +4,7 @@ const mailgun = require("mailgun-js");
 const API_ENDPOINTS = [
   "https://tixel.com/au/music-tickets/2024/11/06/coldplay-accor-stadium-sydney", 
   "https://tixel.com/au/music-tickets/2024/11/07/coldplay-accor-stadium-sydney", 
-  // "https://tixel.com/au/music-tickets/2024/11/10/coldplay-accor-stadium-sydney"
+  "https://tixel.com/au/music-tickets/2024/11/10/coldplay-accor-stadium-sydney"
 ];
 
 exports.handler = async (event, context) => {
@@ -20,9 +20,13 @@ exports.handler = async (event, context) => {
       });
       const data = await response.text();
 
+      const cleanedData = data.replace(/\$203\.54 ea • \d+ tickets/g, '');
+
+      console.log('cleanedData', cleanedData);
+
       const tickets = ['2 tickets', '3 tickets', '4 tickets', '5 tickets']
 
-      const found = tickets.find((x) => data.toLocaleLowerCase().indexOf(x.toLocaleLowerCase()) > -1);
+      const found = tickets.find((x) => cleanedData.toLocaleLowerCase().indexOf(x.toLocaleLowerCase()) > -1);
 
 
       console.log('checking endpoint:', API_ENDPOINT);
