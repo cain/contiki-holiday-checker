@@ -33,6 +33,8 @@ exports.handler = async (event, context) => {
 
 
       console.log('checking endpoint:', API_ENDPOINT);
+
+      console.log('found', found);
       
       // Send email notification if tickets found
       if (found) {
