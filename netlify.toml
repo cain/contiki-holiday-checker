@@ -4,5 +4,5 @@
 # [functions."check"]
 # schedule = "*/5 * * * *"
 
-[functions."coldplay"]
-schedule = "*/3 * * * *"
+# [functions."coldplay"]
+# schedule = "*/3 * * * *"
